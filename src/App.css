@@ -33,12 +33,25 @@
   text-align: left;
 }
 
+.study-session-card {
+  margin: 10px;
+}
+
+.study-session-card p.card-text {
+  margin-bottom: 0;
+  font-size: 1rem;
+}
+
 .study-session-card button {
   float: right;
 }
 
 .study-unit-container {
   max-width: 450px;
+}
+
+.study-unit-container a {
+  color: #61dafb;
 }
 
 .study-unit-btns {

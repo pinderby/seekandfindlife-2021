@@ -104,10 +104,15 @@ function StudyUnit(props) {
                     if (d.value) {
                         return (
                             <div className="study-unit-body">
-                                <h3>{d.value.instructions}</h3>
-                                {d.value.title}
-                                <br/>
-                                {d.value.content}
+                                <h3>{d.value.title}</h3>
+                                <span className="study-unit-instructions">
+                                    {d.value.instructions}
+                                </span>
+                                <br/><br/>
+                                <span className="study-unit-content" 
+                                    dangerouslySetInnerHTML={{ 
+                                         __html: d.value.content}}>
+                                </span>
                             </div>
                         );
                     } else {

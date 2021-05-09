@@ -40,7 +40,8 @@ function StudySession(props) {
                     let currentUnitIndex = sessionInstance.value.currentUnitIndex;
                     return (
                         <FirestoreCollection 
-                            path={"sessionInstances/" + sessionInstanceId + "/unitInstances/"} >
+                            path={"sessionInstances/" + sessionInstanceId + "/unitInstances/"}
+                            orderBy={[{field: "instance_index", type: "asc"}]} >
 
                             {d => {
                                 let unitInstances = [];

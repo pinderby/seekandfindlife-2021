@@ -33,7 +33,8 @@ function StudySessionCard(props) {
                     }}
                 </FirestoreDocument>
                 <FirestoreCollection 
-                    path={"sessionInstances/" + props.sessionInstanceId + "/unitInstances/"} >
+                    path={"sessionInstances/" + props.sessionInstanceId + "/unitInstances/"}
+                    orderBy={[{field: "instance_index", type: "asc"}]} >
 
                     {d => {
                     let unitInstances = [];
