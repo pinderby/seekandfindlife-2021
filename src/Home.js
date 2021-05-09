@@ -56,51 +56,6 @@ function Home() {
       }
     });
 
-    // TODO --DTM-- dynamic userId
-    // var userId = "ALMMc3FcicTmgOvZMK6r";
-    // var sessionInstances = [];
-    // db.collection('/sessionInstances').where('user_id', '==', userId).get().then(snapshot => {
-    //   console.log("snapshot.docs: ", snapshot.docs);
-
-    //   if (snapshot.docs.length) {
-    //     snapshot.docs.forEach(sessionInstance => {
-    //       console.log("sessionInstance: ", sessionInstance.data());
-    //       let sessionInstanceData = sessionInstance.data();
-  
-    //       // Attach session
-    //       db.collection('/sessions').doc(sessionInstanceData.session_id).get().then(snap => {
-    //         console.log("snap sessionInstance.session: ", snap.data());
-    //         sessionInstanceData.session = snap.data();
-    //       });
-          
-    //       sessionInstance.ref.collection('/unitInstances').get().then(unitInstances => {
-    //         console.log("unitInstances.docs: ", unitInstances.docs);
-
-    //         sessionInstanceData.unitInstances = [];
-
-    //         if (unitInstances.docs.length) {
-    //           unitInstances.docs.forEach(unitInstance => {
-    //             console.log("unitInstance: ", unitInstance);
-    //             let unitInstanceData = unitInstance.data();
-
-    //             db.collection('/units').doc(unitInstance.data().unit_id).get().then(snap => {
-    //               console.log("snap unitInstance.unit: ", snap);
-    //               unitInstanceData.unit = snap.data()
-    //               sessionInstanceData.unitInstances.push(unitInstanceData);
-    //             });
-    //           });
-    //         }
-  
-    //         sessionInstances.push(sessionInstanceData);
-          
-    //       });
-    //     });
-    //   }
-
-    //   console.log("sessionInstances1: ", sessionInstances);
-    //   setSessionInstanceList(sessionInstances);
-    // });
-
   }, [])
 
   function signOut(e) {
@@ -125,40 +80,32 @@ function Home() {
         // User is signed in.
         <div className="App">
           <header className="App-header">
-          <h1>Home</h1>
-          {/* // TODO --DTM-- dynamic userId */}
-          <FirestoreCollection path="/sessionInstances/" where={{field: "user_id", operator: "==", value: "ALMMc3FcicTmgOvZMK6r"}}>
-            {d => {
-              let sessionInstances = [];
-              console.log('d: ', d);
-              if(d.value) {
-                d.value.map((sessionInstance, index) => {
-                  console.log('sessionInstance3: ', sessionInstance);
-                  sessionInstances.push(<StudySessionCard 
-                    key={index} 
-                    sessionInstance={sessionInstance}
-                    sessionInstanceId={d.ids[index]} />);
-                });
-              }
-              return (sessionInstances);
-            }}
-          </FirestoreCollection>
-            {/* <img src={logo} className="App-logo" alt="logo" /> */}
-            <p>
-              Edit <code>src/App.js</code> and save to reload.
-            </p>
-            <a
-              className="App-link"
-              href="https://reactjs.org"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn React
-            </a>
+            <h1>Home</h1>
+            {/* // TODO --DTM-- dynamic userId */}
+            <FirestoreCollection 
+              path="/sessionInstances/" 
+              where={{field: "user_id", operator: "==", value: "ALMMc3FcicTmgOvZMK6r"
+              }}>
+
+              {d => {
+                let sessionInstances = [];
+                console.log('d: ', d);
+                if(d.value) {
+                  d.value.map((sessionInstance, index) => {
+                    console.log('sessionInstance3: ', sessionInstance);
+                    sessionInstances.push(<StudySessionCard 
+                      key={index} 
+                      sessionInstance={sessionInstance}
+                      sessionInstanceId={d.ids[index]} />);
+                  });
+                }
+                return (sessionInstances);
+              }}
+            </FirestoreCollection>
             <a 
               className="App-link"
               href="#"
-              onClick={(e) => signOut(e)}>Sign-out</a>
+              onClick={(e) => signOut(e)}>Sign out</a>
           </header>
         </div>
       );

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FirestoreCollection, FirestoreDocument } from "@react-firebase/firestore";
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import { Link } from "react-router-dom";
 
 
 function StudySessionCard(props) {
@@ -15,8 +16,20 @@ function StudySessionCard(props) {
                 <FirestoreDocument path={"/sessions/" + props.sessionInstance.session_id}>
                     {d => {
                         console.log("session d: ", d);
-                        return (d.isLoading ? "Loading..." : 
-                            (d.value ? <Card.Title>{d.value.title}</Card.Title> : ""));
+                        if (d.isLoading) {
+                            return "Loading...";
+                        }
+
+                        if (d.value) {
+                            return (
+                                <Card.Title>
+                                    {d.value.title}
+                                    {props.sessionInstance.completed ? " ☑" : " ☐"}
+                                </Card.Title>
+                            );
+                        } else {
+                            return "";
+                        }
                     }}
                 </FirestoreDocument>
                 <FirestoreCollection 
@@ -25,7 +38,7 @@ function StudySessionCard(props) {
                     {d => {
                     let unitInstances = [];
                     console.log('unitInstances d: ', d);
-                    if(d.value) {
+                    if (d.value) {
                         d.value.map((unitInstance, index) => {
                         console.log('unitInstance: ', unitInstance);
                         unitInstances.push(<UnitInstanceSummary key={index} unitInstance={unitInstance} />);
@@ -34,7 +47,9 @@ function StudySessionCard(props) {
                     return (unitInstances);
                     }}
                 </FirestoreCollection>
-                <Button size="sm" variant="primary">Study Now</Button>
+                <Link to={"/study/" + props.sessionInstanceId}>
+                    <Button size="sm" variant="primary">Study Now</Button>
+                </Link>
             </Card.Body>
         </Card>
     );

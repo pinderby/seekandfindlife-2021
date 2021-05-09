@@ -3,6 +3,7 @@ import logo from './SFL Logo Transparent.png';
 import './App.css';
 import config from './firebase-config';
 import Home from './Home';
+import StudySession from './StudySession';
 // From https://www.npmjs.com/package/react-firebaseui
 import firebase from 'firebase';
 import { FirestoreProvider } from "@react-firebase/firestore";
@@ -24,8 +25,8 @@ if (!firebase.apps.length) {
 const uiConfig = {
   // Popup signin flow rather than redirect flow.
   signInFlow: 'popup',
-  // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
-  signInSuccessUrl: '/signedIn',
+  // Redirect to /home after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
+  signInSuccessUrl: '/home',
   // We will display Google and Facebook as auth providers.
   signInOptions: [
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -42,7 +43,10 @@ function App() {
           {/* A <Switch> looks through its children <Route>s and
               renders the first one that matches the current URL. */}
           <Switch>
-            <Route path="/signedIn">
+            <Route path="/study/:sessionInstanceId">
+              <StudySession />
+            </Route>
+            <Route path="/home">
               {/* <h1>My App</h1> */}
               <Home />
             </Route>

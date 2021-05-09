@@ -37,6 +37,21 @@
   float: right;
 }
 
+.study-unit-container {
+  max-width: 450px;
+}
+
+.study-unit-btns {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.study-unit-btns button {
+  margin: 5px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
