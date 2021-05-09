@@ -28,6 +28,15 @@
   color: #61dafb;
 }
 
+.card {
+  color: black;
+  text-align: left;
+}
+
+.study-session-card button {
+  float: right;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
