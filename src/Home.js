@@ -15,13 +15,13 @@ if (!firebase.apps.length) {
   firebase.app(); // if already initialized, use that one
 };
 
-var user = firebase.auth().currentUser;
+var authUser = firebase.auth().currentUser;
 var db = firebase.firestore();
 
 // TODO --DTM-- REMOVE
-console.log("user: ", user);
-if (user != null) {
-  user.providerData.forEach(function (profile) {
+console.log("authUser: ", authUser);
+if (authUser != null) {
+  authUser.providerData.forEach(function (profile) {
     console.log("Profile: ", profile);
     console.log("Sign-in provider: " + profile.providerId);
     console.log("  Provider-specific UID: " + profile.uid);
@@ -31,14 +31,8 @@ if (user != null) {
   });
 }
 
-// var museums = db.collectionGroup('landmarks').where('type', '==', 'museum');
-// museums.get().then((querySnapshot) => {
-//     querySnapshot.forEach((doc) => {
-//         console.log(doc.id, ' => ', doc.data());
-//     });
-// });
-
 function Home() {
+  const [authUser, setAuthUser] = useState({});
   const [user, setUser] = useState({});
   const [redirect, setRedirect] = useState(false);
   const [sessionInstanceList, setSessionInstanceList] = useState([]);
@@ -46,10 +40,42 @@ function Home() {
   console.log("sessionInstanceList: ", sessionInstanceList);
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
+    firebase.auth().onAuthStateChanged(function(authUser) {
+      if (authUser) {
+        console.log("authUser2: ", authUser);
         // User is signed in.
-        setUser(user);
+        setAuthUser(authUser);
+        // TODO --DTM-- Create user if they don't exist
+        let userRef = db.collection("users").doc(authUser.uid);
+        userRef.get().then((user) => {
+            if (user.exists) {
+                console.log("User:", user.data());
+                setUser(user.data());
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such user!");
+
+                // Create user
+                let userObj = {
+                  name: authUser.displayName,
+                  email: authUser.email,
+                  photoURL: authUser.photoURL,
+                  uid: authUser.uid
+                };
+        
+                userRef.set(userObj, { merge: true })
+                .then(() => {
+                  setUser(userObj);
+                  console.log("User successfully created!");
+                })
+                .catch((error) => {
+                  console.error("Error writing document: ", error);
+                });
+            }
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });
+        
       } else {
         // No user is signed in.
         setRedirect(true);
@@ -84,7 +110,7 @@ function Home() {
             {/* // TODO --DTM-- dynamic userId */}
             <FirestoreCollection 
               path="/sessionInstances/" 
-              where={{field: "user_id", operator: "==", value: "ALMMc3FcicTmgOvZMK6r"
+              where={{field: "user_id", operator: "==", value: user.uid
               }}>
 
               {d => {

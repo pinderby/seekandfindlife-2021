@@ -4,6 +4,9 @@ Deploy:
 - yarn build
 - firebase deploy --only hosting:seekandfindlife
 
+### Helpful Retool Links
+- Working with Firestore: https://docs.retool.com/docs/firebase-integration#working-with-firestore
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
