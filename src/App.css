@@ -29,6 +29,11 @@
   color: #61dafb;
 }
 
+.logo-card {
+  padding: 5px 15px 0px 15px;
+  margin: 10px;
+}
+
 .card {
   color: black;
   text-align: left;

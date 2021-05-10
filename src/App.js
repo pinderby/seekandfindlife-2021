@@ -8,6 +8,7 @@ import StudySession from './StudySession';
 import firebase from 'firebase';
 import { FirestoreProvider } from "@react-firebase/firestore";
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import Card from 'react-bootstrap/Card';
 import {
   BrowserRouter as Router,
   Switch,
@@ -54,7 +55,9 @@ function App() {
               <div className="App">
                 <header className="App-header">
                 <h1>Welcome to SeekandFind.Life!</h1>
-                <img src={logo} alt="logo" style={{width: "300px"}}/>
+                <Card className="logo-card">
+                  <img src={logo} alt="logo" style={{width: "300px"}}/>
+                </Card>
                 <p>Please sign-in:</p>
                 <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
                 </header>
