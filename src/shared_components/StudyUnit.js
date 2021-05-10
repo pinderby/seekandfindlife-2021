@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import firebase from 'firebase';
 import { FirestoreCollection, FirestoreDocument } from "@react-firebase/firestore";
 import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
 import {
     Link,
     useHistory

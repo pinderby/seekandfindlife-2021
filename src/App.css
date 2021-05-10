@@ -19,7 +19,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 50px;
+  padding-top: 25px;
   /* justify-content: center; */
   font-size: calc(10px + 2vmin);
   color: white;
@@ -40,6 +40,7 @@
 }
 
 .study-session-card {
+  max-width: 20rem;
   margin: 10px;
 }
 
@@ -54,6 +55,7 @@
 
 .study-unit-container {
   max-width: 450px;
+  padding: 0px 25px;
 }
 
 .study-unit-container a {
@@ -61,6 +63,7 @@
 }
 
 .study-unit-btns {
+  width: fit-content;
   position: absolute;
   bottom: 15px;
   left: 50%;

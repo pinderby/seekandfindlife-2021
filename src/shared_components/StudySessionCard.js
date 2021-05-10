@@ -11,7 +11,7 @@ function StudySessionCard(props) {
     },[]);
   
     return (
-        <Card className="study-session-card" style={{ width: '18rem' }}>
+        <Card className="study-session-card">
             <Card.Body>
                 <FirestoreDocument path={"/sessions/" + props.sessionInstance.session_id}>
                     {d => {
@@ -48,9 +48,13 @@ function StudySessionCard(props) {
                     return (unitInstances);
                     }}
                 </FirestoreCollection>
-                <Link to={"/study/" + props.sessionInstanceId}>
-                    <Button size="sm" variant="primary">Study Now</Button>
-                </Link>
+                { props.sessionInstance.completed ? "" :
+                    (
+                        <Link to={"/study/" + props.sessionInstanceId}>
+                            <Button size="sm" variant="primary">Study Now</Button>
+                        </Link>
+                    )
+                }
             </Card.Body>
         </Card>
     );

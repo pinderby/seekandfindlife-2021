@@ -49,6 +49,7 @@ function StudySession(props) {
                                 if(d.value) {
                                     return (
                                         <StudyUnit 
+                                            key={d.ids[currentUnitIndex]}
                                             sessionInstanceId={sessionInstanceId}
                                             unitInstanceId={d.ids[currentUnitIndex]}
                                             unitIndex={currentUnitIndex} 
