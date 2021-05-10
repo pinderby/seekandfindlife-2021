@@ -100,7 +100,7 @@ function Home() {
       }}
     />);
   } else {
-    if (user) {
+    if (user.uid) {
       console.log("sessionInstanceList2: ", sessionInstanceList.length);
       return(
         // User is signed in.
