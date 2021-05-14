@@ -23,6 +23,7 @@ function StudyUnit(props) {
         unit_type: "",
         content: ""
     });
+    const [unitType, setUnitType] = useState({});
 
     useEffect(() => {
         console.log('StudyUnit() props: ', props);
@@ -55,15 +56,30 @@ function StudyUnit(props) {
         unitRef.get().then((unit) => {
             if (unit.exists) {
                 console.log("Unit: ", unit.data());
-                setUnit(unit.data());
-                setUnitId(unit.id);
                 firebase.analytics().logEvent('study_unit_started',{
                     user_uid: (firebase.auth().currentUser ? firebase.auth().currentUser.uid : ""),
                     sessionInstanceId: props.sessionInstanceId,
                     unitInstanceId: props.unitInstanceId,
                     unit: JSON.stringify(unit.data()),
-                    unitTitle: unit.data().title,
+                    unitType: unit.data().unit_type,
+                    unitContent: unit.data().content,
                     unitId: unit.id
+                });
+
+                firebase.firestore()
+                .collection("unitTypes").doc(unit.data().unit_type)
+                .get().then((unitType) => {
+                    if (unitType.exists) {
+                        console.log("unitType: ", unitType.data());
+                        setUnitType(unitType.data());
+                        setUnit(unit.data());
+                        setUnitId(unit.id);
+                    } else {
+                        // doc.data() will be undefined in this case
+                        console.log("No such unitType!");
+                    }
+                }).catch((error) => {
+                    console.log("Error getting document:", error);
                 });
             } else {
                 // doc.data() will be undefined in this case
@@ -71,7 +87,7 @@ function StudyUnit(props) {
             }
         }).catch((error) => {
             console.log("Error getting document:", error);
-            });
+        });
     },[]);
 
     function goToNextUnit() {
@@ -117,7 +133,8 @@ function StudyUnit(props) {
                 sessionInstanceId: props.sessionInstanceId,
                 unitInstanceId: props.unitInstanceId,
                 unit: JSON.stringify(unit),
-                unitTitle: unit.title,
+                unitTitle: unitType.title,
+                unitContent: unit.content,
                 unitId: unitId,
                 completion_time: completion_time
             });
@@ -169,9 +186,9 @@ function StudyUnit(props) {
             let name = (firebase.auth().currentUser ? firebase.auth().currentUser.displayName : "");
             axios({
                 method: 'post',
-                url: 'https://hooks.slack.com/services/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',
+                // url: 'https://hooks.slack.com/services/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',
                 // FOR DEVELOPMENT
-                // url: 'https://peaceful-hamlet-19785.herokuapp.com/https://hooks.slack.com/services/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',
+                url: 'https://peaceful-hamlet-19785.herokuapp.com/https://hooks.slack.com/services/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',
                 data: {
                     text: ('*' + name + '* just finished today\'s study session!')
                 }
@@ -254,9 +271,9 @@ function StudyUnit(props) {
 
         studyUnit = (
             <div className="study-unit-body">
-                <h3>{unit.title}</h3>
+                <h3>{(unitType.title ? unitType.title : "")}</h3>
                 <span className="study-unit-instructions">
-                    {unit.instructions}
+                    {(unitType.instructions ? unitType.instructions : "")}
                 </span>
                 <br/><br/>
                 {studyUnitContent}
