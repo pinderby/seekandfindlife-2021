@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import firebase from 'firebase';
 import moment from 'moment';
-import { FirestoreCollection } from "@react-firebase/firestore";
 
 
 function JournalReview(props) {

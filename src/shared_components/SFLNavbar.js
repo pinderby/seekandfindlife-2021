@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import square_logo from '../SFL_Logo_Square.png';
 import firebase from 'firebase';
-import axios from 'axios';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 
@@ -13,24 +12,6 @@ function SFLNavbar(props) {
     function signOut(e) {
         e.preventDefault();
         firebase.auth().signOut();
-    }
-
-    function postToSlack(e) {
-        console.log("postToSlack!");
-        e.preventDefault();
-        // send a POST request to Slack
-        axios({
-            method: 'post',
-            url: 'https://peaceful-hamlet-19785.herokuapp.com/https://hooks.slack.com/services/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',
-            data: {
-                text: 'Praise the Lord!'
-            }
-        })
-        .then((response) => {
-            console.log(response);
-        }, (error) => {
-            console.log(error);
-        });
     }
     
     return (
@@ -49,9 +30,6 @@ function SFLNavbar(props) {
             
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="ml-auto">
-                    <Nav.Link href="#" onClick={(e) => postToSlack(e)}>
-                        Post to Slack!
-                    </Nav.Link>
                     <Nav.Link href="#" onClick={(e) => signOut(e)}>
                         Sign out
                     </Nav.Link>

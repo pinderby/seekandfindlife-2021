@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import firebase from 'firebase';
 import moment from 'moment';
+import axios from 'axios';
 import { FirestoreCollection } from "@react-firebase/firestore";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -160,6 +161,24 @@ function StudyUnit(props) {
                 user_uid: (firebase.auth().currentUser ? firebase.auth().currentUser.uid : ""),
                 sessionInstanceId: props.sessionInstanceId
             });
+
+            // send a POST request to Slack
+            let name = (firebase.auth().currentUser ? firebase.auth().currentUser.displayName : "");
+            axios({
+                method: 'post',
+                // url: 'https://hooks.slack.com/services/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'
+                // FOR DEVELOPMENT
+                url: 'https://peaceful-hamlet-19785.herokuapp.com/https://hooks.slack.com/services/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',
+                data: {
+                    text: (name + ' just finished today\'s study session!')
+                }
+            })
+            .then((response) => {
+                console.log(response);
+            }, (error) => {
+                console.log(error);
+            });
+
             history.push("/home");
         })
         .catch((error) => {
