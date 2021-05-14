@@ -166,11 +166,11 @@ function StudyUnit(props) {
             let name = (firebase.auth().currentUser ? firebase.auth().currentUser.displayName : "");
             axios({
                 method: 'post',
-                // url: 'https://hooks.slack.com/services/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'
+                url: 'https://hooks.slack.com/services/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',
                 // FOR DEVELOPMENT
-                url: 'https://peaceful-hamlet-19785.herokuapp.com/https://hooks.slack.com/services/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',
+                // url: 'https://peaceful-hamlet-19785.herokuapp.com/https://hooks.slack.com/services/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',
                 data: {
-                    text: (name + ' just finished today\'s study session!')
+                    text: ('*' + name + '* just finished today\'s study session!')
                 }
             })
             .then((response) => {
