@@ -71,7 +71,9 @@ function StudySession(props) {
   
     // console.log("sessionInstance: ", sessionInstance);
     let sessionInstanceContent = "";
-    if (sessionInstance.currentUnitIndex) {
+    console.log("sessionInstance2: ", sessionInstance);
+    if (sessionInstance.currentUnitIndex >= 0) {
+        console.log("sessionInstance2: ", sessionInstance.currentUnitIndex);
         let currentUnitIndex = sessionInstance.currentUnitIndex;
         sessionInstanceContent = (
             <FirestoreCollection 

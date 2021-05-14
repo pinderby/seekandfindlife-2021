@@ -70,6 +70,7 @@ function StudySessionCard(props) {
 
 function UnitInstanceSummary(props) {
     const [unit, setUnit] = useState({});
+    const [unitType, setUnitType] = useState({});
 
     useEffect(() => {
         console.log('UnitInstanceSummary() props: ', props);
@@ -79,7 +80,22 @@ function UnitInstanceSummary(props) {
         unitRef.get().then((unit) => {
             if (unit.exists) {
                 console.log("Unit: ", unit.data());
-                setUnit(unit.data());
+
+                firebase.firestore()
+                .collection("unitTypes").doc(unit.data().unit_type)
+                .get().then((unitType) => {
+                    if (unitType.exists) {
+                        console.log("unitType: ", unitType.data());
+                        setUnitType(unitType.data());
+                        setUnit(unit.data());
+                    } else {
+                        // doc.data() will be undefined in this case
+                        console.log("No such unitType: ", unit.data().unit_type);
+                    }
+                }).catch((error) => {
+                    console.log("Error getting document:", error);
+                });
+                
             } else {
                 // doc.data() will be undefined in this case
                 console.log("No such document!");
@@ -89,10 +105,10 @@ function UnitInstanceSummary(props) {
         });
     },[]);
   
-    if (unit.title) {
+    if (unitType.title) {
         return(
             <Card.Text>
-                {props.unitInstance.completed ? "☑" : "☐"} {unit.title}
+                {props.unitInstance.completed ? "☑" : "☐"} {unitType.title}
             </Card.Text>);
     } else {
         return "";

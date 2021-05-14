@@ -128,7 +128,7 @@ function StudyUnit(props) {
         batch.commit().then(() => {
             console.log("UnitInstance successfully completed!");
 
-            firebase.analytics().logEvent('study_unit_started',{
+            firebase.analytics().logEvent('study_unit_completed',{
                 user_uid: (firebase.auth().currentUser ? firebase.auth().currentUser.uid : ""),
                 sessionInstanceId: props.sessionInstanceId,
                 unitInstanceId: props.unitInstanceId,
@@ -159,13 +159,20 @@ function StudyUnit(props) {
     function completeSession() {
         // Get a new write batch
         var batch = db.batch();
+        let completion_time = moment().diff(unitStartedAt, 'seconds');
 
         // Complete unitInstance
         let unitInstanceRef = db.collection("sessionInstances")
             .doc(props.sessionInstanceId)
             .collection("unitInstances")
             .doc(props.unitInstanceId);
-        batch.update(unitInstanceRef, {completed: true});
+        batch.update(unitInstanceRef, {
+            completed: true,
+            completed_at: firebase.firestore.FieldValue.serverTimestamp(),
+            completion_time: completion_time,
+            content: inputValue
+        });
+    
 
         // Update currentUnitIndex
         let sessionInstanceRef = db.collection("sessionInstances")
@@ -177,6 +184,17 @@ function StudyUnit(props) {
         // Commit the batch
         batch.commit().then(() => {
             console.log("SessionInstance successfully completed!");
+            firebase.analytics().logEvent('study_unit_completed',{
+                user_uid: (firebase.auth().currentUser ? firebase.auth().currentUser.uid : ""),
+                sessionInstanceId: props.sessionInstanceId,
+                unitInstanceId: props.unitInstanceId,
+                unit: JSON.stringify(unit),
+                unitTitle: unitType.title,
+                unitContent: unit.content,
+                unitId: unitId,
+                completion_time: completion_time
+            });
+            
             firebase.analytics().logEvent('study_session_completed',{
                 user_uid: (firebase.auth().currentUser ? firebase.auth().currentUser.uid : ""),
                 sessionInstanceId: props.sessionInstanceId
@@ -184,13 +202,19 @@ function StudyUnit(props) {
 
             // send a POST request to Slack
             let name = (firebase.auth().currentUser ? firebase.auth().currentUser.displayName : "");
+            let report;
+            if (inputValue !== "") {
+                report = ('*' + name + '* just finished today\'s study session: ' + inputValue);
+            } else {
+                report = ('*' + name + '* just finished today\'s study session!');
+            }
             axios({
                 method: 'post',
-                // url: 'https://hooks.slack.com/services/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',
+                url: 'https://hooks.slack.com/services/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',
                 // FOR DEVELOPMENT
-                url: 'https://peaceful-hamlet-19785.herokuapp.com/https://hooks.slack.com/services/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',
+                // url: 'https://peaceful-hamlet-19785.herokuapp.com/https://hooks.slack.com/services/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',
                 data: {
-                    text: ('*' + name + '* just finished today\'s study session!')
+                    text: report
                 }
             })
             .then((response) => {
