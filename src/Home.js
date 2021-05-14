@@ -119,7 +119,7 @@ function Home() {
             <h1>Home</h1>
             <FirestoreCollection 
               path="/sessionInstances/" 
-              where={{field: "user_id", operator: "==", value: user.uid
+              where={{field: "user_uid", operator: "==", value: user.uid
               }}>
 
               {d => { 
