@@ -107,10 +107,11 @@ function StudyUnit(props) {
         let sessionInstanceRef = db.collection("sessionInstances")
             .doc(props.sessionInstanceId);
         batch.update(sessionInstanceRef, {currentUnitIndex: props.unitIndex + 1});
-        
+
         // Commit the batch
         batch.commit().then(() => {
             console.log("UnitInstance successfully completed!");
+
             firebase.analytics().logEvent('study_unit_started',{
                 user_uid: (firebase.auth().currentUser ? firebase.auth().currentUser.uid : ""),
                 sessionInstanceId: props.sessionInstanceId,
@@ -120,6 +121,8 @@ function StudyUnit(props) {
                 unitId: unitId,
                 completion_time: completion_time
             });
+
+            props.getSessionInstance();
         })
         .catch((error) => {
             // The document probably doesn't exist.

@@ -9,9 +9,17 @@ const initialState = {unitIndex: 0};
 function reducer(state, action) {
     switch (action.type) {
         case 'increment':
-            return {unitIndex: state.unitIndex + 1};
+            return {
+                sessionInstance: {
+                    currentUnitIndex: state.sessionInstance.currentUnitIndex + 1
+                }
+            };
         case 'decrement':
-            return {unitIndex: state.unitIndex - 1};
+            return {
+                sessionInstance: {
+                    currentUnitIndex: state.sessionInstance.currentUnitIndex - 1
+                }
+            };
         default:
             throw new Error();
     }
@@ -32,8 +40,22 @@ function StudySession(props) {
         console.log('StudySession() props: ', props);
         // console.log('StudySession() state: ', state);
 
+        getSessionInstance();
+    },[]);
+
+    function getSessionInstance() {
         var sessionInstanceRef = firebase.firestore().collection("sessionInstances").doc(sessionInstanceId);
 
+        // TODO --DTM-- Figure out listening to changes
+        // sessionInstanceRef.onSnapshot((sessionInstance) => {
+        //     if (sessionInstance.exists) {
+        //         console.log("sessionInstance: ", sessionInstance.data());
+        //         setSessionInstance(sessionInstance.data());
+        //     } else {
+        //         // doc.data() will be undefined in this case
+        //         console.log("No such sessionInstance!");
+        //     }
+        // });
         sessionInstanceRef.get().then((sessionInstance) => {
             if (sessionInstance.exists) {
                 console.log("sessionInstance: ", sessionInstance.data());
@@ -45,10 +67,9 @@ function StudySession(props) {
         }).catch((error) => {
             console.log("Error getting document:", error);
         });
-
-    },[]);
+    }
   
-    console.log("sessionInstance: ", sessionInstance);
+    // console.log("sessionInstance: ", sessionInstance);
     let sessionInstanceContent = "";
     if (sessionInstance.currentUnitIndex) {
         let currentUnitIndex = sessionInstance.currentUnitIndex;
@@ -66,7 +87,7 @@ function StudySession(props) {
                                 sessionInstanceId={sessionInstanceId}
                                 unitInstanceId={d.ids[currentUnitIndex]}
                                 unitIndex={currentUnitIndex} 
-                                dispatch={dispatch} 
+                                getSessionInstance={getSessionInstance} 
                                 unitInstances={d.value} />);
                     } else {
                         return "Loading...";
