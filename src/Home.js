@@ -8,6 +8,7 @@ import config from './firebase-config';
 import {
   Redirect
 } from "react-router-dom";
+import SFLNavbar from './shared_components/SFLNavbar';
 
 if (!firebase.apps.length) {
   firebase.initializeApp(config);
@@ -50,6 +51,9 @@ function Home() {
         userRef.get().then((user) => {
             if (user.exists) {
                 console.log("User:", user.data());
+                firebase.analytics().logEvent('login',{
+                  user_uid: authUser.uid
+                });
                 setUser(user.data());
             } else {
                 // doc.data() will be undefined in this case
@@ -66,6 +70,11 @@ function Home() {
                 userRef.set(userObj, { merge: true })
                 .then(() => {
                   setUser(userObj);
+                  firebase.analytics().logEvent('sign_up', {
+                    user_uid: authUser.uid,
+                    providerData: authUser.providerData,
+                    providerId: authUser.providerId
+                  });
                   console.log("User successfully created!");
                 })
                 .catch((error) => {
@@ -82,14 +91,14 @@ function Home() {
       }
     });
 
-  }, [])
+    if (!redirect && user.exists) {
+      firebase.analytics().logEvent('page_view',{
+          user_uid: (firebase.auth().currentUser ? firebase.auth().currentUser.uid : ""),
+          page: "home"
+      });
+    }
 
-  function signOut(e) {
-    e.preventDefault();
-    console.log('The link was clicked.');
-    firebase.auth().signOut();
-    // TODO --DTM-- figure out redirect
-  }
+  }, [])
 
   // If not logged in, redirect
   if (redirect) {
@@ -105,15 +114,15 @@ function Home() {
       return(
         // User is signed in.
         <div className="App">
+          <SFLNavbar />
           <header className="App-header">
             <h1>Home</h1>
-            {/* // TODO --DTM-- dynamic userId */}
             <FirestoreCollection 
               path="/sessionInstances/" 
               where={{field: "user_id", operator: "==", value: user.uid
               }}>
 
-              {d => {
+              {d => { 
                 let sessionInstances = [];
                 console.log('d: ', d);
                 if(d.value) {
@@ -128,10 +137,6 @@ function Home() {
                 return (sessionInstances);
               }}
             </FirestoreCollection>
-            <a 
-              className="App-link"
-              href="#"
-              onClick={(e) => signOut(e)}>Sign out</a>
           </header>
         </div>
       );

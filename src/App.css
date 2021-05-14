@@ -29,6 +29,14 @@
   color: #61dafb;
 }
 
+.sfl-navbar img {
+  margin-left: 10px;
+}
+
+.nav-right {
+  float: right;
+}
+
 .logo-card {
   padding: 5px 15px 0px 15px;
   margin: 10px;
@@ -51,6 +59,7 @@
 
 .study-session-card button {
   float: right;
+  margin-bottom: 10px;
 }
 
 .study-unit-container {
@@ -63,11 +72,7 @@
 }
 
 .study-unit-btns {
-  width: fit-content;
-  position: absolute;
-  bottom: 15px;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin-bottom: 25px;
 }
 
 .study-unit-btns button {

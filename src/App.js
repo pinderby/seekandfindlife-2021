@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import logo from './SFL Logo Transparent.png';
+import logo from './SFL_Logo_Transparent.png';
 import './App.css';
 import config from './firebase-config';
 import Home from './Home';
