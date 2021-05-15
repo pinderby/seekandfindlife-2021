@@ -178,6 +178,7 @@ function StudyUnit(props) {
         let sessionInstanceRef = db.collection("sessionInstances")
             .doc(props.sessionInstanceId);
         batch.update(sessionInstanceRef, {
+            completed_at: firebase.firestore.FieldValue.serverTimestamp(),
             completed: true
         });
         

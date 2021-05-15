@@ -8,7 +8,7 @@ Deploy:
 - Working with Firestore: https://docs.retool.com/docs/firebase-integration#working-with-firestore
 
 ### Slack App Webhook Example
-curl -X POST -H 'Content-type: application/json' --data {'text':'Hello, World!'} https://hooks.slack.com/services/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
+curl -X POST -H 'Content-type: application/json' --data {'text':'Hello, World!'} https://hooks.slack.com/services/...
 
 CORS-anywhere url: https://peaceful-hamlet-19785.herokuapp.com/
 
