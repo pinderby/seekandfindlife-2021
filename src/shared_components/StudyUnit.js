@@ -211,12 +211,16 @@ function StudyUnit(props) {
             }
             axios({
                 method: 'post',
-                url: 'https://hooks.slack.com/services/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',
+                url: 'https://hooks.slack.com/services/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',
                 // FOR DEVELOPMENT
-                // url: 'https://peaceful-hamlet-19785.herokuapp.com/https://hooks.slack.com/services/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',
-                data: {
+                // url: 'https://hooks.slack.com/services/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',
+                data: JSON.stringify({
                     text: report
-                }
+                }),
+                transformRequest: [(data, headers) => {
+                    delete headers.post["Content-Type"];
+                    return data;
+                }]
             })
             .then((response) => {
                 console.log(response);
