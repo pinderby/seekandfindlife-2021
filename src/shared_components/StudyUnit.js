@@ -209,26 +209,39 @@ function StudyUnit(props) {
             } else {
                 report = ('*' + name + '* just finished today\'s study session!');
             }
-            axios({
-                method: 'post',
-                url: 'https://hooks.slack.com/services/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',
-                // FOR DEVELOPMENT
-                // url: 'https://hooks.slack.com/services/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',
-                data: JSON.stringify({
-                    text: report
-                }),
-                transformRequest: [(data, headers) => {
-                    delete headers.post["Content-Type"];
-                    return data;
-                }]
-            })
-            .then((response) => {
-                console.log(response);
-            }, (error) => {
-                console.log(error);
+
+            firebase.firestore()
+            .collection("webhooks")
+            // .doc("david") // for testing
+            .doc("truth-pursuit") // for production
+            .get().then((webhook) => {
+                if (webhook.exists) {
+                    console.log("webhook: ", webhook.data());
+                    axios({
+                        method: 'post',
+                        url: webhook.data().url,
+                        data: JSON.stringify({
+                            text: report
+                        }),
+                        transformRequest: [(data, headers) => {
+                            delete headers.post["Content-Type"];
+                            return data;
+                        }]
+                    })
+                    .then((response) => {
+                        console.log(response);
+                        history.push("/home");
+                    }, (error) => {
+                        console.log(error);
+                    });
+                } else {
+                    // doc.data() will be undefined in this case
+                    console.log("No such webhook!");
+                }
+            }).catch((error) => {
+                console.log("Error getting webhook:", error);
             });
 
-            history.push("/home");
         })
         .catch((error) => {
             // The document probably doesn't exist.
