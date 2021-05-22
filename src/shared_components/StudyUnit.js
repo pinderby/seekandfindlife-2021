@@ -15,6 +15,7 @@ import {
 function StudyUnit(props) {
     let history = useHistory();
     var db = firebase.firestore();
+    const [user, setUser] = useState({});
     const [unitStarted, setUnitStarted] = useState(false);
     const [unitStartedAt, setUnitStartedAt] = useState(moment());
     const [unitId, setUnitId] = useState("");
@@ -84,6 +85,20 @@ function StudyUnit(props) {
             } else {
                 // doc.data() will be undefined in this case
                 console.log("No such unit!");
+            }
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });
+
+        let uid = (firebase.auth().currentUser ? firebase.auth().currentUser.uid : "");
+        let userRef = db.collection("users").doc(uid);
+        userRef.get().then((user) => {
+            if (user.exists) {
+                console.log("User:", user.data());
+                setUser(user.data());
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such user!");
             }
         }).catch((error) => {
             console.log("Error getting document:", error);
@@ -202,7 +217,7 @@ function StudyUnit(props) {
             });
 
             // send a POST request to Slack
-            let name = (firebase.auth().currentUser ? firebase.auth().currentUser.displayName : "");
+            let name = (user.name ? user.name : "");
             let report;
             if (inputValue !== "") {
                 report = ('*' + name + '* just finished today\'s study session: ' + inputValue);
@@ -220,6 +235,7 @@ function StudyUnit(props) {
                     axios({
                         method: 'post',
                         url: webhook.data().url,
+                        // url: 'https://peaceful-hamlet-19785.herokuapp.com/'+webhook.data().url,
                         data: JSON.stringify({
                             text: report
                         }),
